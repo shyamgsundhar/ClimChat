@@ -1,5 +1,5 @@
 
-# 🌤️ Weather & Commute Briefing Bot
+# 🌤️ ClimChat
 
 A Python-based automation that delivers a concise daily weather and commute briefing to Discord.
 
