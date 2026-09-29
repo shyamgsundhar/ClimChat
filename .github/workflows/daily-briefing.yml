@@ -1,0 +1,41 @@
+name: Weather and Commute Briefing
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Hourly UTC polling; app sends only at configured local hour.
+    - cron: "30 * * * *"
+
+jobs:
+  briefing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run briefing
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TOMTOM_API_KEY: ${{ secrets.TOMTOM_API_KEY }}
+          LOCATION_NAME: ${{ vars.LOCATION_NAME }}
+          LATITUDE: ${{ vars.LATITUDE }}
+          LONGITUDE: ${{ vars.LONGITUDE }}
+          TIMEZONE: Asia/Kolkata
+          RUN_HOUR: "7"
+          FORCE_RUN: "false"
+          ROUTE_NAME: ${{ vars.ROUTE_NAME }}
+          ORIGIN_LAT: ${{ vars.ORIGIN_LAT }}
+          ORIGIN_LON: ${{ vars.ORIGIN_LON }}
+          DEST_LAT: ${{ vars.DEST_LAT }}
+          DEST_LON: ${{ vars.DEST_LON }}
+          TRANSPORT_MODE: car
+          USUAL_COMMUTE_MINUTES: ${{ vars.USUAL_COMMUTE_MINUTES }}
+        run: python main.py
